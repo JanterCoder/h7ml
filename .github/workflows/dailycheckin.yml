@@ -1,0 +1,294 @@
+name: dailycheckin
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '00 16 * * *'
+    - cron: "30 22 * * *"
+    # cron表达式，时区是UTC时间，比我们早8小时，如上所表示的是每天0点0分（16+8=24点整）
+    # 建议每个人通过设置名称为 Production 的 GitHub Environments 来设定为自己的目标运行时间（详细设置方法见文档说明）
+env:
+  ASPNETCORE_ENVIRONMENT: ${{secrets.ENV}} # 运行环境
+  Ray_BiliBiliCookies__1: ${{secrets.COOKIESTR}}
+  Ray_BiliBiliCookies__2: ${{secrets.COOKIESTR2}}
+  Ray_BiliBiliCookies__3: ${{secrets.COOKIESTR3}}
+  # 推送：
+  Ray_Serilog__WriteTo__3__Args__botToken: ${{secrets.PUSHTGTOKEN}} # Telegram
+  Ray_Serilog__WriteTo__3__Args__chatId: ${{secrets.PUSHTGCHATID}}
+  Ray_Serilog__WriteTo__3__Args__restrictedToMinimumLevel: ${{secrets.PUSHTGLEVEL}}
+  Ray_Serilog__WriteTo__4__Args__webHookUrl: ${{secrets.PUSHWEIXINURL}} # 企业微信
+  Ray_Serilog__WriteTo__4__Args__restrictedToMinimumLevel: ${{secrets.PUSHWEIXINLEVEL}}
+  Ray_Serilog__WriteTo__5__Args__webHookUrl: ${{secrets.PUSHDINGURL}} # 钉钉
+  Ray_Serilog__WriteTo__5__Args__restrictedToMinimumLevel: ${{secrets.PUSHDINGLEVEL}}
+  Ray_Serilog__WriteTo__6__Args__scKey: ${{secrets.PUSHSCKEY}} # Server酱
+  Ray_Serilog__WriteTo__6__Args__turboScKey: ${{secrets.PUSHSERVERTSCKEY}}
+  Ray_Serilog__WriteTo__6__Args__restrictedToMinimumLevel: ${{secrets.PUSHSERVERLEVEL}}
+  Ray_Serilog__WriteTo__7__Args__sKey: ${{secrets.PUSHCOOLSKEY}} # 酷推
+  Ray_Serilog__WriteTo__7__Args__restrictedToMinimumLevel: ${{secrets.PUSHCOOLLEVEL}}
+  Ray_Serilog__WriteTo__8__Args__api: ${{secrets.PUSHOTHERAPI}} # 自定义api
+  Ray_Serilog__WriteTo__8__Args__placeholder: ${{secrets.PUSHOTHERPLACEHOLDER}}
+  Ray_Serilog__WriteTo__8__Args__bodyJsonTemplate: ${{secrets.PUSHOTHERBODYJSONTEMPLATE}}
+  Ray_Serilog__WriteTo__8__Args__restrictedToMinimumLevel: ${{secrets.PUSHOTHERLEVEL}}
+  Ray_Serilog__WriteTo__9__Args__token: ${{secrets.PUSHPLUSTOKEN}} # PushPlus
+  Ray_Serilog__WriteTo__9__Args__topic: ${{secrets.PUSHPLUSTOPIC}}
+  Ray_Serilog__WriteTo__9__Args__channel: ${{secrets.PUSHPLUSCHANNEL}}
+  Ray_Serilog__WriteTo__9__Args__webhook: ${{secrets.PUSHPLUSWEBHOOK}}
+  Ray_Serilog__WriteTo__9__Args__restrictedToMinimumLevel: ${{secrets.PUSHPLUSLEVEL}}
+  # 安全相关：
+  Ray_Security__IsSkipDailyTask: ${{secrets.ISSKIPDAILYTASK}}
+  Ray_Security__IntervalSecondsBetweenRequestApi: ${{secrets.INTERVALSECONDSBETWEENREQUESTAPI}}
+  Ray_Security__IntervalMethodTypes: ${{secrets.INTERVALMETHODTYPES}}
+  Ray_Security__UserAgent: ${{secrets.USERAGENT}}
+  Ray_Security__WebProxy: ${{secrets.WEBPROXY}}
+  Ray_Security__RandomSleepMaxMin: ${{secrets.RANDOMSLEEPMAXMIN}}
+  # 每日任务：
+  Ray_DailyTaskConfig__NumberOfCoins: ${{secrets.NUMBEROFCOINS}}
+  Ray_DailyTaskConfig__SaveCoinsWhenLv6: ${{secrets.SAVECOINSWHENLV6}}
+  Ray_DailyTaskConfig__SelectLike: ${{secrets.SELECTLIKE}}
+  Ray_DailyTaskConfig__SupportUpIds: ${{secrets.SUPPORTUPIDS}}
+  Ray_DailyTaskConfig__DayOfAutoCharge: ${{secrets.DAYOFAUTOCHARGE}}
+  Ray_DailyTaskConfig__AutoChargeUpId: ${{secrets.AUTOCHARGEUPID}}
+  Ray_DailyTaskConfig__ChargeComment: ${{secrets.CHARGECOMMENT}}
+  Ray_DailyTaskConfig__DayOfReceiveVipPrivilege: ${{secrets.DAYOFRECEIVEVIPPRIVILEGE}}
+  Ray_DailyTaskConfig__DayOfExchangeSilver2Coin: ${{secrets.DAYOFEXCHANGESILVER2COIN}}
+  Ray_DailyTaskConfig__DevicePlatform: ${{secrets.DEVICEPLATFORM}}
+  Ray_Serilog__WriteTo__0__Args__restrictedToMinimumLevel: ${{secrets.CONSOLELOGLEVEL}}
+  Ray_Serilog__WriteTo__0__Args__outputTemplate: ${{secrets.CONSOLELOGTEMPLATE}}
+  TELECOM_MOBILE: ${{ secrets.TELECOM_MOBILE }}
+  SEND_KEY: ${{ secrets.SEND_KEY }}
+  PUSH_KEY: ${{ secrets.PUSH_KEY }}
+  PUSH_PLUS_TOKEN: ${{ secrets.BARK_PUSH }}
+  USH_PLUS_TOKEN: ${{ secrets.PUSH_PLUS_TOKEN}}
+  PUSH_PLUS_USER: ${{ secrets.PUSH_PLUS_USER}}
+  QYWX_AM: ${{ secrets.QYWX_AM}}
+  QYWX_KEY: ${{ secrets.QYWX_KEY}}
+  TG_PROXY_HOST: ${{ secrets.TG_PROXY_HOST}}
+  TG_PROXY_PORT: ${{ secrets.TG_PROXY_PORT}}
+  IGOT_PUSH_KEY: ${{ secrets.IGOT_PUSH_KEY}}
+  TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+  TG_USER_ID: ${{ secrets.TG_USER_ID }}
+  BARK_SOUND: ${{ secrets.BARK_SOUND }}
+  DD_BOT_TOKEN: ${{ secrets.DD_BOT_TOKEN }}
+  DD_BOT_SECRET: ${{ secrets.DD_BOT_SECRET }}
+  BIKA_USER: ${{ secrets.BIKA_USER }}
+  BIKA_PASS: ${{ secrets.BIKA_PASS }}
+  BILI_USER: ${{ secrets.BILI_USER }}
+  BILI_PASS: ${{ secrets.BILI_PASS }}
+  BILI_COOKIE: ${{ secrets.BILI_COOKIE }}
+  BILI_NUM: ${{ secrets.BILI_NUM }}
+  BILI_TYPE: ${{ secrets.BILI_TYPE }}
+  BILI_S2C: ${{ secrets.BILI_S2C }}
+  iQIYI_COOKIE: ${{ secrets.iQIYI_COOKIE }}
+  BDUSS: ${{ secrets.BDUSS }}
+  JUMP: ${{ secrets.BDUSS-JUMP }}
+  V_REF_URL: ${{ secrets.V_REF_URL }}
+  V_COOKIE: ${{ secrets.V_COOKIE }}
+  V2EXCK: ${{ secrets.V2EXCK }}
+  Xiaomi_User: ${{ secrets.XIAOMI_USER }}
+  Xiaomi_Pw: ${{ secrets.XIAOMI_PW }}
+  Xiaomi_Bs: ${{ secrets.XIAOMI_BS }}
+  COOKIE: ${{ secrets.H7MLCOOKIE }}
+  COOKIE_2: ${{ secrets.COOKIE_2 }}
+  COOKIE_3: ${{ secrets.COOKIE_3 }}
+  COOKIE_4: ${{ secrets.COOKIE_4 }}
+  COOKIE_5: ${{ secrets.COOKIE_5 }}
+  EMAIL_USER: ${{ secrets.EMAIL_USER }}
+  EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+  EMAIL_TO: ${{ secrets.EMAIL_TO }}
+  DINGDING_WEBHOOK: ${{ secrets.DINGDING_WEBHOOK }}
+  PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
+  WEIXIN_WEBHOOK: ${{ secrets.WEIXIN_WEBHOOK }}
+
+
+jobs:
+  dailycheckin:
+    runs-on: ubuntu-latest
+    name: dailycheckin
+    steps:
+      - name: Set up Python 🚀
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+      - name: python cache 🚀
+        uses: actions/cache@v2
+        with:
+          path: '~/.cache/pip'
+          key: "${{ runner.os }}-pip-cache-${{ hashFiles('setup.cfg') }}"
+          restore-keys: |
+            "${{ runner.os }}-pip-cache-"
+            "${{ runner.os }}-pip-"
+      - name: dailycheckin
+        run: |
+          wget ${{secrets.config}} -O config.json
+          pip install dailycheckin --user
+          dailycheckin
+
+
+  hot_rank:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup timezone  🚀
+        uses: zcong1993/setup-timezone@master
+        with:
+          timezone: Asia/Shanghai
+      - uses: actions/checkout@v2
+        with:
+          ref: main
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-go@v1
+        with:
+          go-version: '1.15.4' # The Go version to download (if necessary) and use.
+      - run: go mod download
+      - run: go run generate_readme.go
+      - name: Commit files  🚀
+        run: |
+          git add README.md
+          git config --local user.email "h7ml@qq.com"
+          git config --local user.name "h7ml"
+          git commit --allow-empty -m ":rocket: Update today's hot rank on $(date)" -a
+      - name: Push changes  🚀
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GIT_TOKEN }}
+          branch: ${{ github.ref }}
+
+  juejin:
+    runs-on: ubuntu-latest
+    name: juejin
+    steps:
+      - name: Checkout 🚀
+        uses: actions/checkout@v2
+        with:
+          repository: 'Wiederhoeft/juejin-helper'
+          branch: main
+      - name: npm包安装
+        run: npm ci
+      - name: 开始任务
+        env:
+          EMAIL_USER: dext7r@163.com
+          EMAIL_PASS: ${{ secrets.EMAIL_163PASS }}
+          USER_MOBILE: ${{ secrets.USER_MOBILE }}
+          USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
+          USER_EMAIL: ${{ secrets.EMAIL_TO }}
+          USER_PRIVACY: ${{ secrets.USER_PRIVACY }}
+          #EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          #EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          #EMAIL_TO: ${{ secrets.EMAIL_TO }}
+        run: |
+          node index.js
+
+  bilibili:
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
+      # 设置服务器时区为东八区
+      - name: Set time zone
+        run: sudo timedatectl set-timezone 'Asia/Shanghai'
+      # 检出
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          repository: 'RayWangQvQ/BiliBiliToolPro'
+          branch: main
+      # .Net 环境
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+      # 运行
+      - name: Run APP
+        run: |
+          cd ./src/Ray.BiliBiliTool.Console
+          dotnet run --runTasks=Daily
+
+  iDerekLi:
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
+      # 设置服务器时区为东八区
+      - name: Set time zone
+        run: sudo timedatectl set-timezone 'Asia/Shanghai'
+      # 检出
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          repository: 'iDerekLi/juejin-helper'
+          branch: main
+      - uses: actions/setup-node@v2
+      - name: Run Project
+        run: |
+          cd workflows
+          yarn
+          yarn checkin
+          yarn seagold
+
+  MayoBlueSky:
+    runs-on: ubuntu-latest
+    steps:
+      # 设置服务器时区为东八区
+      - name: Set time zone
+        run: sudo timedatectl set-timezone 'Asia/Shanghai'
+      # 检出
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          repository: 'MayoBlueSky/My-Actions'
+          ref: master
+          fetch-depth: '79c7d58f0e7a610d22f7bf639073ffb4062d754d'
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Install dependencies
+        run: |
+          npm install
+          node function/10000/10000.js
+          node function/iQIYI-DailyBonus/iqiyi.js
+          node function/tieba/tieba.js
+          node function/q_video/q_video.js
+          node function/v2ex/v2ex.js
+      - name: '初始化Python'
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+      - name: Install requirements
+        run: |
+          npm install
+          pip install -r ./requirements.txt
+      - name: '运行 所有签到'
+        run: |
+          python3 function/bika/bika.py
+          python3 function/bilibili/bilibili.py
+          python3 function/xiaomi_sports/xiaomi.py
+
+  wechatSport:
+    runs-on: ubuntu-latest
+    steps:
+      # 设置服务器时区为东八区
+      - name: Set time zone
+        run: sudo timedatectl set-timezone 'Asia/Shanghai'
+      # 检出
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          repository: 'Caryio/ChangeWechatSport'
+          ref: main
+          fetch-depth: 'df5d8d124aa446ec02dec6876358e41933b0585e'
+
+      - name: Use pyton
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install requirements
+        run: |
+          pip install -r ./requirements.txt
+      - name: Update system and install zsh
+        run: python3 changebushu_Action.py
+        env:
+          USER_PHONE: ${{ secrets.XIAOMI_USER }}
+          USER_PWD: ${{ secrets.XIAOMI_PW }}
+          STEP: 10000
+          STEP_MIN: 60000
+          STEP_MAX: 660000
+
