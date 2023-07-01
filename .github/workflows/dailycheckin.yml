@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '00 16 * * *'
-    - cron: "30 22 * * *"
+    - cron: '30 22 * * *'
     # cron表达式，时区是UTC时间，比我们早8小时，如上所表示的是每天0点0分（16+8=24点整）
     # 建议每个人通过设置名称为 Production 的 GitHub Environments 来设定为自己的目标运行时间（详细设置方法见文档说明）
 env:
@@ -98,7 +98,6 @@ env:
   PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
   WEIXIN_WEBHOOK: ${{ secrets.WEIXIN_WEBHOOK }}
 
-
 jobs:
   dailycheckin:
     runs-on: ubuntu-latest
@@ -122,7 +121,6 @@ jobs:
           pip install dailycheckin --user
           dailycheckin
 
-
   hot_rank:
     runs-on: ubuntu-latest
     steps:
@@ -135,13 +133,10 @@ jobs:
           ref: main
           persist-credentials: false
           fetch-depth: 0
-      - uses: actions/setup-go@v1
-        with:
-          go-version: '1.15.4' # The Go version to download (if necessary) and use.
-      - run: go mod download
-      - run: go run generate_readme.go
+
       - name: Commit files  🚀
         run: |
+          curl -o README.md https://nest.h7ml.cn/api/github.md
           git add README.md
           git config --local user.email "h7ml@qq.com"
           git config --local user.name "h7ml"
@@ -291,4 +286,3 @@ jobs:
           STEP: 10000
           STEP_MIN: 60000
           STEP_MAX: 660000
-

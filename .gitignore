@@ -22,3 +22,7 @@ dist/
 # vendor/
 bin/*
 go.sum
+node_modules
+h7ml
+dist
+*.log
