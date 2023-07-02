@@ -18,7 +18,6 @@ jobs:
           go-version: '1.15.4' # The Go version to download (if necessary) and use
       - run: |
           wget https://raw.githubusercontent.com/h7ml/h7ml.github.io/netlify/sitemap.txt -O urls.txt
-          curl -H 'Content-Type:text/plain' --data-binary @urls.txt "http://data.zz.baidu.com/urls?site=https://www.h7ml.cn&token=unmWrGQ9puPdyCug"
           go mod download
           go run link.go
 

@@ -5,6 +5,6 @@ import (
 )
 
 func main() {
-	linksubmit.ZhanZhang()
+	linksubmit.Baidu()
 	linksubmit.Sm()
 }
