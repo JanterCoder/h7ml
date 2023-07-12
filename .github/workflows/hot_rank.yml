@@ -1,9 +1,9 @@
-name: dailycheckin
+name: hot_rank
 on:
   workflow_dispatch:
   schedule:
-    - cron: '00 16 * * *'
-    - cron: '30 22 * * *'
+    - cron: '40 16 * * *'
+    - cron: '59 22 * * *'
 jobs:
   hot_rank:
     runs-on: ubuntu-latest

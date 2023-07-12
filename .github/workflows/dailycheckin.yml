@@ -130,8 +130,13 @@ jobs:
         with:
           repository: 'Wiederhoeft/juejin-helper'
           branch: main
+      - name: Install pnpm  🚀
+        uses: pnpm/action-setup@v2
+        with:
+          version: 7
+          run_install: false
       - name: npm包安装
-        run: npm ci
+        run: pnpm install
       - name: 开始任务
         env:
           EMAIL_USER: dext7r@163.com
