@@ -19,7 +19,7 @@ jobs:
           fetch-depth: 0
       - name: Download file
         run: |
-          curl -o README.md https://nest.h7ml.cn/api/github.md
+          wget -O README.md https://nest.h7ml.cn/api/github.md
           file_content=$(cat README.md)
 
           if [ -z "$file_content" ]; then
