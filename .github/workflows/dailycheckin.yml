@@ -139,6 +139,7 @@ jobs:
         run: pnpm install
       - name: 开始任务
         env:
+          USER_COOKIE: ${{ secrets.USER_COOKIE }}
           EMAIL_USER: dext7r@163.com
           EMAIL_PASS: ${{ secrets.EMAIL_163PASS }}
           USER_EMAIL: ${{ secrets.EMAIL_TO }}
