@@ -136,13 +136,9 @@ jobs:
         env:
           EMAIL_USER: dext7r@163.com
           EMAIL_PASS: ${{ secrets.EMAIL_163PASS }}
-          USER_MOBILE: ${{ secrets.USER_MOBILE }}
-          USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
           USER_EMAIL: ${{ secrets.EMAIL_TO }}
           USER_PRIVACY: ${{ secrets.USER_PRIVACY }}
-          #EMAIL_USER: ${{ secrets.EMAIL_USER }}
-          #EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
-          #EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           node index.js
 
@@ -170,66 +166,6 @@ jobs:
           cd ./src/Ray.BiliBiliTool.Console
           dotnet run --runTasks=Daily
 
-  iDerekLi:
-    runs-on: ubuntu-latest
-    environment: Production
-    steps:
-      # 设置服务器时区为东八区
-      - name: Set time zone
-        run: sudo timedatectl set-timezone 'Asia/Shanghai'
-      # 检出
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          repository: 'iDerekLi/juejin-helper'
-          branch: main
-      - uses: actions/setup-node@v2
-      - name: Run Project
-        run: |
-          cd workflows
-          yarn
-          yarn checkin
-          yarn seagold
-
-  MayoBlueSky:
-    runs-on: ubuntu-latest
-    steps:
-      # 设置服务器时区为东八区
-      - name: Set time zone
-        run: sudo timedatectl set-timezone 'Asia/Shanghai'
-      # 检出
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          repository: 'MayoBlueSky/My-Actions'
-          ref: master
-          fetch-depth: '79c7d58f0e7a610d22f7bf639073ffb4062d754d'
-
-      - name: Use Node.js 16
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-      - name: Install dependencies
-        run: |
-          npm install
-          node function/10000/10000.js
-          node function/iQIYI-DailyBonus/iqiyi.js
-          node function/tieba/tieba.js
-          node function/q_video/q_video.js
-          node function/v2ex/v2ex.js
-      - name: '初始化Python'
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.8'
-      - name: Install requirements
-        run: |
-          npm install
-          pip install -r ./requirements.txt
-      - name: '运行 所有签到'
-        run: |
-          python3 function/bika/bika.py
-          python3 function/bilibili/bilibili.py
-          python3 function/xiaomi_sports/xiaomi.py
 
   wechatSport:
     runs-on: ubuntu-latest
