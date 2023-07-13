@@ -1,0 +1,1 @@
+import{_ as o,r as n,o as s,c as r,a as e,d as a,w as c,b as l}from"./app-2a9bb723.js";const _={};function d(i,u){const t=n("RouterLink");return s(),r("div",null,[e("ul",null,[e("li",null,[a(t,{to:"/posts/PostgreSQL/PostgreSQL.html"},{default:c(()=>[l("PostgreSQL")]),_:1})])])])}const f=o(_,[["render",d],["__file","index.html.vue"]]);export{f as default};
