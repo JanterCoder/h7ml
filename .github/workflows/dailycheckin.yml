@@ -147,7 +147,7 @@ jobs:
           category_id: ${{ secrets.category_id }}
           theme_ids: ${{ secrets.theme_ids }}
           tag_ids: ${{ secrets.tag_ids }}
-          coverImage: ${{ coverImage.tag_ids }}
+          coverImage: ${{ secrets.coverImage }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           node index.js
